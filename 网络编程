@@ -1,0 +1,90 @@
+该文件为python学习过程中的一点笔记 用于输出所学到的东西 并且巩固
+由于我是有一点基础的将不会从最基础的地方开始记起 本次学习将会从网络编程开始
+  网络编程
+  网络编程实际上就是计算机网络中两个不同的进程通过网络进行通信。一般的网络通信都是基于TCP/IP协议的。自底向上依次是网络接口、网络层、传输层和应用层。
+TCP：传输控制协议，基于网络层提供的IP地址和路由负责实现端到端可靠传输的协议，TCP协议向应用层保证三个方面：1.数据不会穿丢传错（可靠传输）2.流量控制（通过滑动窗口）3.拥塞控制
+  基于传输层协议的套接字编程
+套接字编程需要import socket包 使用socket.socket(AF_Inet,SOCK_STREAM)来定义一个TCP套接字。如果是要创建服务器端 需要将其套接字绑定（bind（IP，port））到IP地址和端口上。
+这里绑定的port是IP地址的一个扩展 并不是物理意义上的端口，该port用于区分不同服务，一般，HTTP绑定到80端口，mysql绑定到3306端口。下面用一个代码案例来实现一个提供时间日期的服务器
+
+from socket import socket,AF_INET,SOCK_STREAM
+from datatime import datatime 
+#1.首先创建套接字并且制定什么服务 TCP还是UDP
+def main(){
+  server=socket(AF_INET,SOCK_STREAM)#该语句创建了一个使用Ipv4的TCP套接字 当AF_INET6为ipv6，SOCK_DGRAM 表示UDP套接字
+  #2.创建套接字后 服务器端需要绑定ip和port
+  server.bind(('192.168.1.2',6789))#blind函数内的参数是一个元组！
+  #3.开启监听
+  server.listen(512)#512可以当成连接队列大小。
+  print（'start listening')
+  #4.下面将通过一个死循环来接受客户端的连接并提供服务
+  while True:
+    client,addr=server.accept()#accept是一个阻塞方法 如果没有连接的话程序将不会往下运行，accept（）方法返回两个元素第一个为客户端对象第二个为地址 包括IP地址和port。
+    print(f'{str(addr)}连接到了服务器。')
+    #5.发送数据
+    client.send(str(datatime.now().enocde())
+    #6.断开连接
+    client.close()
+}
+  if __name__=='__main__':
+    main()
+总的来说，实现服务器端的socket有点复杂：1.首先创建socket连接 s=socket(family=AF_INET,type=SCOK_STREAM) 2.创立socket连接后可以绑定IP地址和端口：s.bind((ip,port)) 参数是一个元祖！
+3.将服务器设置为监听状态 s.listen(num) num为最大的连接队列长度 4.通过accept方法来等待连接并返回客户端对象以及地址 地址包括IP地址和端口 client,addr=s.accept() 5.下面client和服务器
+都可以传输或接收信息 client.send() client.recv()  s.send s.recv()然后client断开连接 client.close()
+  相比较而言 创建一个客户端所需的流程就简单许多
+  from socket import socket
+  def main(){
+    #1.创建socket套接字
+    client=socket()#默认使用IPV4和TCP
+    #2.连接到server
+    client.connect(('192.168.1.2',6789))#  connect（）的参数也是元组！
+    #3.打印或接收信息
+    print(client.recv().decode())
+    client.close()
+  }
+  if __name__='__main__':
+    main()
+  '''
+    下面举一个利用SMTP协议发邮件以及发短信的例子来进一步学习网络编程
+  '''
+from smtplib import SMTP
+from email.header import Header
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+
+import urllib
+def main(){
+  #首先创建一个带附件的邮件消息对象
+  message=MIMEMultipart()
+  text_content=MIMEText('附件中有你需要的东西！','plain','utf-8')
+  message['subject']=Head('本月数据','utf-8')
+  message.attach(text_content) 
+  #读取文件并且把文件当成附件
+  with open('/Users/Hao/Desktop/hello.txt', 'rb') as f:
+        txt = MIMEText(f.read(), 'base64', 'utf-8')
+        txt['Content-Type'] = 'text/plain'
+        txt['Content-Disposition'] = 'attachment; filename=hello.txt'
+        message.attach(txt)
+    # 读取文件并将文件作为附件添加到邮件消息对象中
+    with open('/Users/Hao/Desktop/汇总数据.xlsx', 'rb') as f:
+        xls = MIMEText(f.read(), 'base64', 'utf-8')
+        xls['Content-Type'] = 'application/vnd.ms-excel'
+        xls['Content-Disposition'] = 'attachment; filename=month-data.xlsx'
+        message.attach(xls)
+    #到目前为止，邮件信息已经准备就绪，现在需要建立SMTP连接来进行邮件发送环节
+    smtper=SMTP('smtp.126.com)
+    #开始安全连接
+    sender='changsenxia@126.com'
+    receivers=['123456@qq.com']#receiver得用一个列表来表示，因为要发送的不一定是一个人 也可以发送多个人
+    #登录
+    smtper.login(sender,'secertepass')#这边的第二个参数是指授权码并不是密码
+    #发送邮件
+    smtper.sendmail(sender,receivers,message.as_string())
+    #发送后断开连接
+    smtper.quit()
+    
+    if __name__='__main__'"
+      main()
+ #总的来说就是先设置文件格式 邮件的text内容，还有邮件的附件 附件操作涉及到文件操作，设置好邮件的内容后即可使用SMTP协议来创建一个SMTP对象 想登陆 smtper.login(),smtper.sendmail(),smtper.quit()
+}
