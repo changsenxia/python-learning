@@ -1,0 +1,26 @@
+  图像基本知识：
+  在计算机中一般用 ‘R’，‘G’，‘B’的组合来表示各种不同的颜色.称为RGB值 还有一个RGBA值,A表示alpha通道 表示透明度.
+  一般用于图像操作的库 是pillow库 如果计算机未安装该库 可通过 pip install pillow来安装。通过pillow库可以实现图像压缩以及图像处理等操作。
+  pillow库中最重要的是Image类。图像的读取和处理都是通过Image类来实现。
+  下面是一个示例代码 改代码通过使用Image类来打开一个图像image并且显示他的格式以及大小还有模式
+  #首先从pillow库中导入Image类
+  from pillow import Image 
+  #用Image类的open（）方法来打开指定路径的图片 返回一个image对象
+  image=Image.open('root')#该root表示
+  image.format, iamge.mode,image.size#分别表示了图像的格式、是否为RGB以及规模大小
+  #可以通过image的show（）方法展示图片
+  #还可以对图像进行裁剪 设计需要裁剪的区域 例如 rect=80,20,310,360 分别代表左上角坐标和右下角坐标。
+   rect=80,20,310,360
+   #设计好裁剪区域后 可以使用image的crop（）方法来进行裁剪
+   image.crop(rect).show()
+   #还可以对image进行一个缩略，设置好size 例如size=128,128
+   size=128,128 #设置好size后 通过thumbnail方法进行缩放
+   image.thumbnail(size).show()
+   #可以通过putpixel操作像素例如：
+   for x in range(80,310):
+    for y in range(20,360):
+      image.putpixel((x,y),(128,128,128))
+
+#用python进行办公  但是目前感觉我不是很需要暂停学 先略过
+
+ 
