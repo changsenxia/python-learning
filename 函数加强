@@ -1,0 +1,104 @@
+#lambda函数以及高阶函数
+#用一个应用：学员管理系统来实际巩固知识点
+'''
+1.系统简介：添加学员、删除学员、修改学员信息、查询学员信息、显示所有学员信息、退出系统  
+2.步骤分析：1.显示功能界面 2.用户输入功能序号 3.根据用户输入的功能序号 执行不同的函数
+3.按照步骤实现代码
+'''
+下面按部就班的代码实现 首先实现第一个功能 显示功能界面
+  1.显示功能界面
+  def info_print():
+    print('please select a function-------------')
+    print('1. 添加学员'）
+    print('2. 删除学员'）
+    print('3. 修改学员信息'）
+    print('4. 查询学员信息'）
+    print('5. 显示所有学员信息'）
+    print('6. 退出系统'）
+    print('-----------------------')
+    
+   
+  while f!=6:
+   info_print()
+   f=int(input('please input a number:'))
+    if f==1:
+      print('添加')
+    elif f==2：
+      print('删除')
+    elif f==3：
+      print('修改')
+    elif f==4：
+      print('查询')
+    elif f==5：
+      print('显示所有')
+    elif f==6：
+      print('退出')
+    else:
+      print('输入的序号有误 请输入正确的序号')
+学员信息包含id、年龄、姓名、年龄号、手机号 可以用字典来存储 一个字典代表一个学员 用一个列表来村所有学员信息
+所以创建一个列表
+ info=[]
+添加学员信息，必须得是用户先输入信息进去 然后判断该信息是否已经位于info列表内 在的话就报错提示已有信息 不在的话就添加进去
+def add_member():
+  '''
+  add xueyuan xinxi
+  '''
+  new_id=input()
+  new_name=input()
+  new_tel=input()
+  global info#声明全局变量
+  for i in info:
+    if new_id==i['id']:
+      print('already exist)
+      return 
+ info_dict={}
+ info_dict['id']=new_id
+ info_dict['name']=new_name
+ info_dict['tel']=new_tel
+ info.append(info_dict)
+ print(info)#到这一步已经添加完成
+ 下面是删除学员功能
+ #需求分析：根据ID来删除学员信息 如果ID不存在则报错 显示无该id
+ def del_info():
+  del_id=int(input('请输入要删除的员工id'))
+  global info
+  for i in range(len(info)):
+    if del_id==info[i]['id']:
+      info.remove(i)
+      print('删除成功')
+      break
+  if i==len(info):
+    print ('该员工不存在系统内 请输入正确的员工id')
+    return
+#下面实现修改成员代码，思路分析 根据输入修改员工的id 可以修改姓名、电话。
+def aler_info():
+  aler=int(input('请输入要修改员工的id：'))
+  global info
+  for i in range(len(info)):
+    if aler_id==info[i]['id']:
+      aler_name=input('请输入修改后的名字：')
+      aler_tel=input('请输入修改后的电话：')
+      info[i]['name']=aler_name
+      info[i]['tel']=aler_tel
+      print('修改成功')
+      break
+  if i==len(info):
+    print ('该员工不存在系统内 请输入正确的员工id')
+    return
+ 下面实现修改成员的代码实现，思路分析：输入id后输出该id的信息
+ def sear_info():
+  sear_id=int(input('请输入要查找的员工id：'))
+  global info
+  for i in range(len(info)):
+    if sear_id==info[i]['id']:
+      print(info[i])
+      print('查找成功')
+      break
+  if i==len(info):
+    print ('该员工不存在系统内 请输入正确的员工id')
+    return
+至此函数的一些个应用已经完成 对于函数的初步掌握还可以
+ 下面学习匿名函数 lambda表达式
+ lambda表达式的作用就是为了简化代码即 函数只有一个返回值 只有一句代码 使用lambda可以节省代码量可以节省内存开销
+ lambda 参数列表：表达式  #该表达式必须要有返回值
+    
